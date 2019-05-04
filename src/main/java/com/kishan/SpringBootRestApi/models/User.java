@@ -2,15 +2,15 @@ package com.kishan.SpringBootRestApi.models;
 
 import java.util.Date;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 public class User {
 	
 	private Integer id;
+	@Size(min=2,message = "Please provide name with alteast 2 chars.")
 	private String name;
+	@Past(message = "Birth date cannot be in past.")
 	private Date birthDate;
 	
 	public User() {

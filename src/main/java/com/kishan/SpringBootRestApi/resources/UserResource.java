@@ -1,11 +1,16 @@
 package com.kishan.SpringBootRestApi.resources;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,12 +36,25 @@ public class UserResource {
 	}
 	
 	@GetMapping("/users/{id}")
-	public User getUser(@PathVariable int id) {
+	public Resource<User> getUser(@PathVariable int id) {
 		User user = userDao.findOne(id);
 		if(null == user) {
 			throw new UserNotFoundException("User with id:"+id+" not found");
 		}
-		return user;
+		
+		// Hateoas
+		Resource<User> resource = new Resource<>(user);
+		
+		ControllerLinkBuilder userPostlink = linkTo(methodOn(PostResource.class).getPost(id));
+		ControllerLinkBuilder allUsers = linkTo(methodOn(UserResource.class).getAllUsers());
+		ControllerLinkBuilder allPosts = linkTo(methodOn(PostResource.class).getAllPosts());
+		
+		
+		resource.add(userPostlink.withRel("UserPosts"));
+		resource.add(allUsers.withRel("AllUsers"));
+		resource.add(allPosts.withRel("AllPosts"));
+		
+		return resource;
 	}
 
 	@PostMapping("/users")

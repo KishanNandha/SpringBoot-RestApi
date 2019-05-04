@@ -26,12 +26,12 @@ public class PostResource {
 	private PostDao postDao;
 	
 	@GetMapping("/posts")
-	public List<Post> getAllUsers(){
+	public List<Post> getAllPosts(){
 		return postDao.findAll();
 	}
 	
 	@GetMapping("/posts/{id}")
-	public Post getUser(@PathVariable int id) {
+	public Post getPost(@PathVariable int id) {
 		Post post = postDao.findOne(id);
 		if(null == post) {
 			throw new PostNotFoundException("Post with id:"+id+" not found");
@@ -40,7 +40,7 @@ public class PostResource {
 	}
 
 	@PostMapping("/posts")
-	public  ResponseEntity<Object> createUser(@Valid @RequestBody Post post) {
+	public  ResponseEntity<Object> createPost(@Valid @RequestBody Post post) {
 		Post newPost = postDao.saveUser(post);
 		URI location = ServletUriComponentsBuilder   
 						.fromCurrentRequest() //gets current request path i.e. localhost:8080/posts
@@ -52,7 +52,7 @@ public class PostResource {
 	}
 	
 	@DeleteMapping("/posts/{id}")
-	public void daleteUser(@PathVariable int id) {
+	public void daletePost(@PathVariable int id) {
 		Post post = postDao.findOne(id);
 		if(null == post) {
 			throw new PostNotFoundException("Post with id:"+id+" not found");

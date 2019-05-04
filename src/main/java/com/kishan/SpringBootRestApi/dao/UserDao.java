@@ -40,4 +40,8 @@ public class UserDao {
 		}
 		return null;
 	}
+	
+	public void deleteOne(User user) {
+		users.remove(user);
+	}
 }

@@ -9,6 +9,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,9 @@ public class UserResource {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	MessageSource messageSource;
 	
 	@GetMapping("/users")
 	public List<User> getAllUsers(){
@@ -76,5 +81,12 @@ public class UserResource {
 			throw new UserNotFoundException("User with id:"+id+" not found");
 		}
 		userDao.deleteOne(user);
+	}
+	
+	@GetMapping("/goodmorning")
+	public String i18nDemo() {
+		//LocaleContextHolder.getLocale() will get locale for request header Accept - Language 
+		String message = messageSource.getMessage("good.morning.message", null, LocaleContextHolder.getLocale());
+		return message;
 	}
 }
